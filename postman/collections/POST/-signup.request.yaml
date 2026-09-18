@@ -1,0 +1,6 @@
+$kind: http-request
+name: /signup
+description: ""
+url: http://localhost:3000/getUserData
+method: GET
+order: 1789725797860

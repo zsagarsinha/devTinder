@@ -2,31 +2,33 @@ const express = require('express');
 
 const app = express();
 
+const connectDB = require("./config/database");
+const  User = require("./models/user");
 
-app.use("/",(err,req,res,next) => {
-  if(err){
-    res.status(500).send("Error occurred while fetching user data contact support team");
-  }
-})
+app.post("/signup",async (req,res) => {
+  const user = new User({
+    firstName : "Karuna",
+    lastName : "Sinha",
+    emailID : "karuna@sinha.com",
+    password : "karuna@123"
+  });
+  try{
+    await user.save();
+  res.send("User is Successfully Signed Up");}
+catch(err) {
+  res.status(400).send("Error in signing up the user");
 
-app.get("/getUserData",(req,res) => {
-  //try{
-  // Db query to get user data
+}});
 
- throw new Error("Database connection failed");
-  res.send("User data sent")
-//   catch(err){
-//     res.status(500).send("Error occurred while fetching user data");
-//     console.log("Error occurred while fetching user data");
-// }
-});
-
-app.use("/",(err,req,res,next) => {
-  if(err){
-    res.status(500).send("Error occurred while fetching user data contact support team");
-  }
-})
-
-app.listen(3000, () => {
+connectDB()
+    .then(() => {
+        console.log("Database connection established...");
+        app.listen(3000, () => {
   console.log("Server is successfully listening on port 3000");
 }); 
+
+    })
+    .catch((err) => {
+        console.log("Error connecting to the database", err);
+    }
+)
