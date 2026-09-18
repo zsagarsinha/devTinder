@@ -2,26 +2,30 @@ const express = require('express');
 
 const app = express();
 
-const {adminAuth,userAuth} = require("../middlewares/auth");
 
-app.use("/admin",adminAuth)
-
-app.get("/admin/getAllData", (req,res,) =>{
-  res.send("All data is fetched successfully")
-
-});
-
-app.get("/admin/deleteUser",(req,res) => {
-  res.send("User is deleted successfully")
+app.use("/",(err,req,res,next) => {
+  if(err){
+    res.status(500).send("Error occurred while fetching user data contact support team");
+  }
 })
 
-app.get("/user/data",userAuth, (req,res,next) => {
-  res.send("User data is fetched successfully")
+app.get("/getUserData",(req,res) => {
+  //try{
+  // Db query to get user data
+
+ throw new Error("Database connection failed");
+  res.send("User data sent")
+//   catch(err){
+//     res.status(500).send("Error occurred while fetching user data");
+//     console.log("Error occurred while fetching user data");
+// }
 });
 
-app.get("/user/login",(req,res) => {
-  res.send("User is logged in successfully")
-});
+app.use("/",(err,req,res,next) => {
+  if(err){
+    res.status(500).send("Error occurred while fetching user data contact support team");
+  }
+})
 
 app.listen(3000, () => {
   console.log("Server is successfully listening on port 3000");
