@@ -62,10 +62,18 @@ app.delete("/user", async (req,res) => {
 })
 
 //updating an existing user
-app.patch("/user", async (req,res) => {
-  const userID = req.body.userID;
+app.patch("/user/:userID", async (req,res) => {
+  const userID = req.params?.userID;
   const data = req.body;
   try{
+    const ALLOWED_UPDATES = [ "password", "about", "photoUrl", "skills"];
+    const isUpdateAllowed = Object.keys(data).every((k) => ALLOWED_UPDATES.includes(k)); // Takes all the keys in data and checks whether EVERY key is present in the ALLOWED_UPDATES array or not. If yes, then isUpdateAllowed will be true, else false
+    if(!isUpdateAllowed) {
+      return res.status(400).send("Invalid updates ");
+    } 
+    if(data.skills.length > 10) {
+      throw new Error("Skills cannot be more than 10"); 
+    }
     await User.findByIdAndUpdate(userID, data, { runValidators: true }); // Update the user with the given ID and data, and run validators
     
     res.send("User updated successfully");
