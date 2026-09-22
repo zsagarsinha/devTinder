@@ -47,7 +47,8 @@ const userSchema = new mongoose.Schema({
             if(value !== "male" && value !== "female" && value !== "other") {
                 throw new Error("Gender must be either male, female or other");
             }
-    }},
+       }
+  },
     about : {
         type : String,
         default : "Hey there! I am using DevTinder"
