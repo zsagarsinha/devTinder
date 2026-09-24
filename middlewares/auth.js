@@ -1,30 +1,25 @@
-const adminAuth = (req, res, next) => {
-    console.log("Admin authentication is being performed");
-    const token = "xyz"; // This should be replaced with actual token verification logic
-    const isAuthorized = token ==="xyz"
-    if(!isAuthorized)
-    {
-        res.status(401).send("Unauthorized User")
-    } else{
-        console.log("Admin authentication is done successfully");
-        next();
-    }
-}
+const jwt = require("jsonwebtoken");
+const User = require("../src/models/user")
 
-const userAuth = (req, res, next) => {
-    console.log("User authentication is being performed");
-    const token = "abc"; // This should be replaced with actual token verification logic
-    const isAuthorized = token ==="abc"
-    if(!isAuthorized)
-    {
-        res.status(401).send("Unauthorized User")
-    } else{
-        console.log("User authentication is done successfully");
-        next();
+const userAuth = async (req, res, next) => {
+    try {
+    const {token} = req.cookies;
+    if(!token){
+        throw new Error("Token not valid");
     }
-}
 
-module.exports = {
-    adminAuth,
-    userAuth
+    const decodedObj = await jwt.verify(token, "DEVTINDER$6767");
+
+    const{_id} = decodedObj;
+
+    const user = await User.findById(_id);
+    if(!user){
+        throw new Error("User does not exist");
+    }
+    req.user = user;
+    next();
+ } catch (err) {
+    res.status(400).send("ERROR: " +err.message);
 }
+}
+module.exports = {userAuth};
