@@ -44,7 +44,9 @@ authRouter.post("/login", async (req,res) => {
       res.cookie("token",token, {
         expires : new Date(Date.now() + 8 * 3600000),
       });
-      res.send("Login Successfull!!")
+const USER_SAFE_DATA = "firstName lastName photoURL status gender age about"
+
+      res.send(user);
     }
     else{
       throw new Error("Invalid credentials")
